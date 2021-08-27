@@ -33,7 +33,6 @@ export const handleSwitch = payload => ({
 export function getRateRequest(fromCurrency, toCurrency) {
   // Node API KEY
   const API = process.env.REACT_APP_API_SECERET;
-  //  const url = `http://data.fixer.io/api/convert?access_key=${API}&from =${fromCurrency}&to${toCurrency}`;
   const url = `https://free.currconv.com/api/v7/convert?q=${fromCurrency}_${toCurrency}&compact=ultra&apiKey=${API}`;
   return axios.get(url);
 }

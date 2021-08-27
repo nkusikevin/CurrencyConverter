@@ -6,7 +6,3 @@ export const TO_CURRENCY_CHANGE = 'TO_CURRENCY_CHANGE';
 export const HANDEL_ERROR = 'HANDEL_ERROR';
 export const SWITCH_BETWEEN = 'SWITCH_BETWEEN';
 
-
-export const LATEST_RE = "LATEST_RE";
-export const LATEST_SUCCESS = "LATEST_SUCCESS";
-export const LASTEST_FAIL = "LASTEST_FAIL";

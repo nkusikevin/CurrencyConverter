@@ -17,16 +17,14 @@ function LatestRates() {
 	Object.keys(rate).forEach(function (key) {
 		arr.push(rate[key]);
 	});
-	console.log(arr);
 	return (
 		<>
 			<h1>Latest Rates</h1>
-			{Object.keys(rate).map((key) => (
-				<Card>
-					{key} - {rate[key]}
+			{Object.keys(rate).map((keyer) => (
+				<Card key={keyer}>
+					{keyer} - {rate[keyer]}
 				</Card>
 			))}
-            
 		</>
 	);
 }

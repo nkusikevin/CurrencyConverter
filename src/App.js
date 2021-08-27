@@ -11,9 +11,10 @@ const App = () => (
 	<Provider store={store}>
 		<BrowserRouter>
 			<Nav />
-			<Route path='/Convert' component={Currency} />
-			<Route path='/LatestRates' component={LatestRates} />
-			<Route path='/HistoryRates' component={HistoryRates} />
+			<Route path='/' component={LatestRates} exact />
+			<Route path='/LatestRates' component={LatestRates} exact />
+			<Route path='/Convert' component={Currency} exact />
+			<Route path='/HistoryRates' component={HistoryRates} exact />
 		</BrowserRouter>
 	</Provider>
 );
