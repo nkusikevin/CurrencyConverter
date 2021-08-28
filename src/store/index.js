@@ -6,10 +6,6 @@ const initialState = {
   currency: {
     data: {},
     error: "",
-    to: 0,
-    from: 0,
-    convertFrom: "EUR",
-    convertTo: "USD",
     isFetched: false
   }
 };

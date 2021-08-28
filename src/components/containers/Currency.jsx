@@ -1,152 +1,87 @@
-import React, { Fragment, useEffect } from "react";
-import { connect } from "react-redux";
-import switchIco from "./switch.svg";
+import React, {useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 
 import {
-  GlobalStyle,
-  AppWrapper,
-  Error,
-  CurrencyConverter,
-  CurrencyInfo,
-  Input,
-  Loading,
-  Image
+	GlobalStyle,
+	AppWrapper,
+	CurrencyConverter,
+	CurrencyInfo,
+	Input,
+	Loading,
+	Form,
+	Button,
 } from "../styles";
 
 import { Select } from "../Select";
 
-import {
-  getRate,
-  fromChangeInput,
-  toChangeInput,
-  fromCurrencyChange,
-  toCurrencyChange,
-  handleSwitch
-} from "../../store/actions/currencyActions";
+import {getRate} from "../../store/actions/currencyActions";
 
-import currencyExchangeList from "../../consts/CurrencyCodes";
-import { displayCurrency } from "../../utils/currencyUtils";
+function Currency() {
+const dispatch = useDispatch();
+const [rate, setrates] = useState([]);
+const [text1, settext1] = useState(1)
+const [text2, settext2] = useState(1);
+const [value1, setvalue1] = useState()
+const [value2, setvalue2] = useState();
+const currency = useSelector((state) => state.currency);
+const { data, isFetched } = currency;
+const { rates } = data;
+// console.log(rate);
 
-function Currency({
-  error,
-  isFetched,
-  from,
-  to,
-  convertFrom,
-  convertTo,
-  fromChangeInput,
-  fromCurrencyChange,
-  toChangeInput,
-  toCurrencyChange,
-  handleSwitch,
-  getRate
-}) {
-  useEffect(() => {
-		getRate(convertFrom, convertTo);
-	}, [convertFrom, convertTo, getRate]);
+useEffect(() => {
+	dispatch(getRate());
+	if (isFetched) {
+		setrates(rates);
+	}
+}, [dispatch, rates, isFetched]);
 
-  const currencyList = Object.values(currencyExchangeList);
-  return (
-    <Fragment>
-      <GlobalStyle />
-      {error && <Error>{error.message}</Error>}
-      {!isFetched && !error && <Loading>Loading...</Loading>}
-      {isFetched && (
-        <AppWrapper>
-          <CurrencyInfo>
-            <p>
-              {displayCurrency({
-                currencyList,
-                currencyId: convertFrom,
-                number: from
-              })}{" "}
-              equals{" "}
-            </p>
-            <h4>
-              {displayCurrency({
-                currencyList,
-                currencyId: convertTo,
-                number: to
-              })}
-            </h4>
-          </CurrencyInfo>
-
-          <CurrencyConverter>
-            <Input
-              type="number"
-              value={from}
-              onChange={e => fromChangeInput(e.target.value)}
-            />
-
-            <Select
-              value={convertFrom}
-              onChange={e => fromCurrencyChange(e.target.value)}
-              currencyList={currencyList}
-            />
-          </CurrencyConverter>
-          <Image
-              onClick={handleSwitch}
-              width="50"
-              src={switchIco}
-              alt="Switch"
-          />
-          <CurrencyConverter>
-            <Input
-              type="number"
-              value={to}
-              onChange={e => toChangeInput(e.target.value)}
-            />
-
-            <Select
-              value={convertTo}
-              onChange={e => toCurrencyChange(e.target.value)}
-              currencyList={currencyList}
-            />
-          </CurrencyConverter>
-        </AppWrapper>
-      )}
-    </Fragment>
-  );
+const currencyList = rate;
+const handleSubmit=(e)=>{
+  e.preventDefault()
+  console.log("value1"+value1);
+  console.log("value2"+value2);
+  let num = (value2/value1)*text1
+  settext2(num)
 }
+  return (
+		<Form onSubmit={handleSubmit}>
+			<GlobalStyle />
+			{!isFetched && <Loading>Loading...</Loading>}
+			{isFetched && (
+				<AppWrapper>
+					<CurrencyInfo></CurrencyInfo>
 
-const mapStateToProps = ({ currency }) => ({
-  currency: currency.data,
-  error: currency.error,
-  isFetched: currency.isFetched,
-  from: currency.from,
-  to: currency.to,
-  convertFrom: currency.convertFrom,
-  convertTo: currency.convertTo,
-  toChangeInput: currency.toChangeInput,
-  fromChangeInput: currency.fromChangeInput,
-  fromCurrencyChange: currency.fromCurrencyChange,
-  toCurrencyChange: currency.toCurrencyChange,
-  handleSwitch: currency.handleSwitch,
-  getRate: currency.getRate
-});
+					<CurrencyConverter>
+						<Input
+							type='number'
+							value={text1 || ""}
+							onChange={(e) => settext1(e.target.value)}
+						/>
 
-const mapDispatchToProps = dispatch => ({
-  getRate: (fromCurrency, toCurrency) => {
-    dispatch(getRate(fromCurrency, toCurrency));
-  },
-  toChangeInput: value => {
-    dispatch(toChangeInput(value));
-  },
-  fromChangeInput: value => {
-    dispatch(fromChangeInput(value));
-  },
-  fromCurrencyChange: payload => {
-    dispatch(fromCurrencyChange(payload));
-  },
-  toCurrencyChange: payload => {
-    dispatch(toCurrencyChange(payload));
-  },
-  handleSwitch: payload => {
-    dispatch(handleSwitch(payload));
-  }
-});
+						<Select
+							value={value1 || ""}
+							currencyList={currencyList}
+							onChange={(e) => setvalue1(e.target.value)}
+						/>
+					</CurrencyConverter>
+					<CurrencyConverter>
+						<Input
+							type='number'
+							value={text2 || ""}
+							onChange={(e) => settext2(e.target.value)}
+						/>
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Currency);
+						<Select
+							value={value2 || ""}
+							currencyList={currencyList}
+							onChange={(e) => setvalue2(e.target.value)}
+						/>
+					</CurrencyConverter>
+					<Button>Convert</Button>
+				</AppWrapper>
+			)}
+		</Form>
+	);
+}
+ export default Currency;

@@ -89,3 +89,15 @@ export const Card = styled.div`
   padding:1rem;
   margin:0.85rem
 `;
+export const Form = styled.form`
+border:1px solid;
+background:teal;
+padding:1rem;
+`
+
+export const Button = styled.button`
+	border: 1px solid;
+	background: teal;
+	padding: 1rem;
+  cursor:pointer;
+`;

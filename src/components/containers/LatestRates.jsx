@@ -1,22 +1,23 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import {useDispatch ,useSelector} from "react-redux"
 import{Card} from '../styles'
+import { getRate } from "../../store/actions/currencyActions";
 function LatestRates() {
-	const [rate, setrates] = useState("");
-	var arr = [];
-	const fetchData = async () => {
-		const results  = await axios.get(
-			"http://data.fixer.io/api/latest?access_key=7be9ecd39c520e2cd5c5fad627913de2"
-		);
-		setrates(results.data.rates);
-	};
-
+	const dispatch = useDispatch();
+	const [rate, setrates] = useState([]);
+	const currency = useSelector((state) => state.currency);
+	const { data, isFetched } = currency;
+	const { rates } = data;
+	// console.log(rate);
+	
 	useEffect(() => {
-		fetchData();
-	}, []);
-	Object.keys(rate).forEach(function (key) {
-		arr.push(rate[key]);
-	});
+		dispatch(getRate());
+		if (isFetched) {
+			setrates(rates);
+			
+		}
+	}, [dispatch ,isFetched, rates]);
+
 	return (
 		<>
 			<h1>Latest Rates</h1>
